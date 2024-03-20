@@ -1,0 +1,78 @@
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Product List</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+    tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+  </style>
+</head>
+<body>
+  <h1>Product List</h1>
+  <table id="products-table">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Price</th>
+        <th>Popularity</th>
+      </tr>
+    </thead>
+    <tbody>
+        
+    </tbody>
+  </table>
+
+  <script>
+    // Function to fetch the JSON data and parse it
+    function fetchAndDisplayProducts() {
+      fetch('https://s3.amazonaws.com/open-to-cors/assignment.json')
+        .then(response => response.json())
+        .then(data => {
+          const products = Object.values(data.products);
+          const sortedProducts = products.sort((a, b) => parseInt(b.popularity) - parseInt(a.popularity));
+          displayProducts(sortedProducts);
+        })
+        .catch(error => console.error('Error fetching data:', error));
+    }
+
+    // Function to display the products in a table
+    function displayProducts(products) {
+      const tableBody = document.getElementById('products-table').getElementsByTagName('tbody')[0];
+
+      products.forEach(product => {
+        let row = tableBody.insertRow();
+        let titleCell = row.insertCell(0);
+        let priceCell = row.insertCell(1);
+        let popularityCell = row.insertCell(2);
+
+        titleCell.textContent = product.title;
+        priceCell.textContent = product.price;
+        popularityCell.textContent = product.popularity;
+      });
+    }
+
+    // Call the function on page load
+    document.addEventListener('DOMContentLoaded', fetchAndDisplayProducts);
+  </script>
+</body>
+</html>
